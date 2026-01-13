@@ -64,15 +64,12 @@ export default function Dashboard({ userId, onNavigateToHistory }: DashboardProp
     const [isCreatingEvent, setIsCreatingEvent] = useState(false);
 
     const handleDateClick = (date: Date) => {
-        console.log('📅 Date clicked:', date.toISOString(), 'Opening modal...');
+        console.log('📅 Date clicked:', date.toISOString());
         setSelectedDate(date);
         setEventModalDate(date);
-        setIsEventModalOpen(true);
-        setIsEventModalOpen(true);
         setNewEventTitle('');
         setNewEventTime({ start: '09:00', end: '10:00' });
         setIsAllDay(false);
-        console.log('📅 Modal should be open now, isEventModalOpen: true');
     };
 
     const handleCreateEvent = async () => {
@@ -358,6 +355,10 @@ export default function Dashboard({ userId, onNavigateToHistory }: DashboardProp
                                 selectedDate={selectedDate}
                                 currentDate={calendarViewDate}
                                 onNavigate={setCalendarViewDate}
+                                onAddEvent={(date) => {
+                                    setEventModalDate(date);
+                                    setIsEventModalOpen(true);
+                                }}
                             />
                         </section>
 

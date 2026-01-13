@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './CalendarWidget.module.css';
 
 export interface CalendarEvent {
@@ -18,9 +18,10 @@ interface CalendarWidgetProps {
     onDateSelect?: (date: Date) => void;
     currentDate?: Date; // Parent controlled date
     onNavigate?: (date: Date) => void;
+    onAddEvent?: (date: Date) => void;
 }
 
-export default function CalendarWidget({ events, selectedDate, onDateSelect, currentDate: propDate, onNavigate }: CalendarWidgetProps) {
+export default function CalendarWidget({ events, selectedDate, onDateSelect, currentDate: propDate, onNavigate, onAddEvent }: CalendarWidgetProps) {
     // If propDate is provided, use it. Otherwise maintain internal state (hybrid approach, or just force controlled)
     // To minimize complexity, let's assume if onNavigate is present, it's controlled.
 
@@ -101,12 +102,24 @@ export default function CalendarWidget({ events, selectedDate, onDateSelect, cur
                     onClick={() => onDateSelect?.(date)}
                 >
                     <span>{d}</span>
-                    <div style={{ display: 'flex', gap: '2px', marginTop: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', gap: '2px', marginTop: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {dayEvents.slice(0, 3).map((e, i) => (
                             <div key={i} className={styles.eventDot} title={e.summary} />
                         ))}
                         {dayEvents.length > 3 && <span style={{ fontSize: '8px', lineHeight: 1 }}>+</span>}
                     </div>
+                    {isSelected && onAddEvent && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAddEvent(date);
+                            }}
+                            className={styles.addEventBtn}
+                            title="일정 추가"
+                        >
+                            +
+                        </button>
+                    )}
                 </div>
             );
         }
